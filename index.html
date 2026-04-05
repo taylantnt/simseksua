@@ -3,46 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
     <title>Simsek Sua Tortu - Portfolio</title>
     
     <!-- ============================================================================
          SITE CONFIGURATION
-         Update your Cloudinary Cloud Name and Image IDs here
+         ALL YOUR IMAGE LINKS IN ONE SPOT
+         We added 'dpr_auto' so images look super crisp on Apple/Retina devices!
          ============================================================================ -->
     <script>
         window.SiteConfig = {
-            // Replace with your actual Cloudinary Cloud Name
-            cloudName: 'YOUR_CLOUD_NAME',
-            
-            // Total number of gallery images
+            cloudName: 'drnh8zy84',
             totalGalleryImages: 214,
             
-            // Image IDs (the part of the URL after /upload/)
-            images: {
-                hero: 'hero', // ID for the about section background
-                profile: 'profile.jpg', // ID for the sidebar profile picture
-                presetBefore: 'before1.JPG', // ID for the 'before' preset images
-                presetAfter: 'after1.jpg', // ID for the 'after' preset images
-                galleryPrefix: 's-' // Prefix for gallery images (e.g., 's-' for s-1.jpg, s-2.jpg...)
-            }
+            // Just paste the full links here
+            profile: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414953/profile_uon3ro.jpg',
+            presetBefore: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414957/before1_dzqutg.jpg',
+            presetAfter: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414955/after1_gkvq24.jpg',
+            hero: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/hero'
         };
 
-        // Helper to generate Cloudinary URLs
-        window.getImgUrl = function(key) {
-            const id = window.SiteConfig.images[key] || key;
-            // Using f_auto,q_auto for automatic format and quality optimization
-            return `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/f_auto,q_auto/${id}`;
-        };
+        // Apply background images
+        document.documentElement.style.setProperty('--hero-bg-url', `url('${window.SiteConfig.hero}')`);
         
-        // Apply dynamic CSS variables for background images
-        document.documentElement.style.setProperty('--hero-bg-url', `url('${window.getImgUrl('hero')}')`);
-        
-        // Apply configured image URLs to all elements with data-img-key
+        // Apply configured image URLs to elements on the page
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('[data-img-key]').forEach(el => {
                 const key = el.getAttribute('data-img-key');
-                if (el.tagName === 'IMG') {
-                    el.src = window.getImgUrl(key);
+                if (window.SiteConfig[key] && el.tagName === 'IMG') {
+                    el.src = window.SiteConfig[key];
                 }
             });
         });
@@ -205,22 +194,32 @@
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 0px;
+            /* Changed from 300px to 200px to fit more photos on wider screens */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 5px; /* Added a tiny gap for a bit more structure and depth */
+            padding: 5px; /* Padding to match the gap */
         }
 
         .gallery-item {
             position: relative;
             overflow: hidden;
-            height: 300px;
+            height: 250px; /* Reduced from 300px to match the smaller width */
             cursor: pointer;
+            border-radius: 4px; /* Soft edges for an elegant, deep look */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover {
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2); /* Enhanced shadow on hover for depth */
+            z-index: 2; /* Ensure the shadow shows above other items */
         }
 
         .gallery-item:hover img {
@@ -861,9 +860,9 @@ var(--hero-bg-url) center/cover;
             // Photo Viewer Controller
             class PhotoViewer {
                 constructor() {
-                    // Generate base URLs for full images and thumbnails
-                    this.baseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/f_auto,q_auto/${window.SiteConfig.images.galleryPrefix}`;
-                    this.thumbBaseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/c_fill,w_300,f_auto,q_auto/${window.SiteConfig.images.galleryPrefix}`;
+                    // Generate base URLs for full images and thumbnails (added dpr_auto for Retina devices)
+                    this.baseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/f_auto,q_auto,dpr_auto/s-`;
+                    this.thumbBaseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/c_fill,w_300,f_auto,q_auto,dpr_auto/s-`;
                     this.currentImageIndex = 0;
                     this.totalImages = window.SiteConfig.totalGalleryImages;
                     this.imageCache = new Map();
