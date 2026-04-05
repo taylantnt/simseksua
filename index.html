@@ -4,6 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simsek Sua Tortu - Portfolio</title>
+    
+    <!-- ============================================================================
+         SITE CONFIGURATION
+         Update your Cloudinary Cloud Name and Image IDs here
+         ============================================================================ -->
+    <script>
+        window.SiteConfig = {
+            // Replace with your actual Cloudinary Cloud Name
+            cloudName: 'YOUR_CLOUD_NAME',
+            
+            // Total number of gallery images
+            totalGalleryImages: 214,
+            
+            // Image IDs (the part of the URL after /upload/)
+            images: {
+                hero: 'hero', // ID for the about section background
+                profile: 'profile.jpg', // ID for the sidebar profile picture
+                presetBefore: 'before1.JPG', // ID for the 'before' preset images
+                presetAfter: 'after1.jpg', // ID for the 'after' preset images
+                galleryPrefix: 's' // Prefix for gallery images (e.g., 's' for s1.jpg, s2.jpg...)
+            }
+        };
+
+        // Helper to generate Cloudinary URLs
+        window.getImgUrl = function(key) {
+            const id = window.SiteConfig.images[key] || key;
+            // Using f_auto,q_auto for automatic format and quality optimization
+            return `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/f_auto,q_auto/${id}`;
+        };
+        
+        // Apply dynamic CSS variables for background images
+        document.documentElement.style.setProperty('--hero-bg-url', `url('${window.getImgUrl('hero')}')`);
+        
+        // Apply configured image URLs to all elements with data-img-key
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-img-key]').forEach(el => {
+                const key = el.getAttribute('data-img-key');
+                if (el.tagName === 'IMG') {
+                    el.src = window.getImgUrl(key);
+                }
+            });
+        });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -192,7 +236,7 @@
             z-index: 1;
             color: white;
             background: radial-gradient(rgba(0, 0, 0, 0.5), rgba(107, 107, 107, 0.4) 36.13%, rgba(0, 0, 0, 0.5)), 
-url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') center/cover;
+var(--hero-bg-url) center/cover;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -642,7 +686,7 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
     <div class="sidebar">
         <div class="profile-pic">
             <a href="https://www.instagram.com/simsek.sua/" target="_blank">
-                <img src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/profile.jpg?v=1744224850194" alt="Profile Picture">
+                <img data-img-key="profile" alt="Profile Picture">
                 <img class="instagram-overlay" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153.509.5.902 1.105 1.153 1.772.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772c-.5.508-1.105.902-1.772 1.153-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 0 0-2.5 0 1.25 1.25 0 0 0 2.5 0zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z' fill='%23000000'/%3E%3C/svg%3E" alt="Instagram">
             </a>
         </div>
@@ -687,8 +731,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         • Soft contrast for that authentic film look
                     </p>
                     <img-comparison-slider>
-                        <img slot="first" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/before1.JPG?v=1744739893725">
-                        <img slot="second" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/after1.jpg?v=1744739718866">
+                        <img slot="first" data-img-key="presetBefore">
+                        <img slot="second" data-img-key="presetAfter">
                     </img-comparison-slider>
                     <a href="#" class="btn">PURCHASE</a>
                 </div>
@@ -707,8 +751,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         • Enhanced texture and depth
                     </p>
                     <img-comparison-slider>
-                        <img slot="first" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/before1.JPG?v=1744739893725">
-                        <img slot="second" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/after1.jpg?v=1744739718866">
+                        <img slot="first" data-img-key="presetBefore">
+                        <img slot="second" data-img-key="presetAfter">
                     </img-comparison-slider>
                     <a href="#" class="btn">PURCHASE</a>
                 </div>
@@ -727,8 +771,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         • Perfect for lifestyle and portrait photography
                     </p>
                     <img-comparison-slider>
-                        <img slot="first" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/before1.JPG?v=1744739893725">
-                        <img slot="second" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/after1.jpg?v=1744739718866">
+                        <img slot="first" data-img-key="presetBefore">
+                        <img slot="second" data-img-key="presetAfter">
                     </img-comparison-slider>
                     <a href="#" class="btn">PURCHASE</a>
                 </div>
@@ -747,8 +791,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         • Dramatic color grading
                     </p>
                     <img-comparison-slider>
-                        <img slot="first" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/before1.JPG?v=1744739893725">
-                        <img slot="second" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/after1.jpg?v=1744739718866">
+                        <img slot="first" data-img-key="presetBefore">
+                        <img slot="second" data-img-key="presetAfter">
                     </img-comparison-slider>
                     <a href="#" class="btn">PURCHASE</a>
                 </div>
@@ -767,8 +811,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         • Perfect for outdoor and portrait photography
                     </p>
                     <img-comparison-slider>
-                        <img slot="first" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/before1.JPG?v=1744739893725">
-                        <img slot="second" src="https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/after1.jpg?v=1744739718866">
+                        <img slot="first" data-img-key="presetBefore">
+                        <img slot="second" data-img-key="presetAfter">
                     </img-comparison-slider>
                     <a href="#" class="btn">PURCHASE</a>
                 </div>
@@ -817,9 +861,11 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
             // Photo Viewer Controller
             class PhotoViewer {
                 constructor() {
-                    this.baseUrl = 'https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/s';
+                    // Generate base URLs for full images and thumbnails
+                    this.baseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/f_auto,q_auto/${window.SiteConfig.images.galleryPrefix}`;
+                    this.thumbBaseUrl = `https://res.cloudinary.com/${window.SiteConfig.cloudName}/image/upload/c_fill,w_300,f_auto,q_auto/${window.SiteConfig.images.galleryPrefix}`;
                     this.currentImageIndex = 0;
-                    this.totalImages = 214;
+                    this.totalImages = window.SiteConfig.totalGalleryImages;
                     this.imageCache = new Map();
                     this.modal = document.getElementById('photoViewer');
                     this.modalImg = document.getElementById('modalImage');
@@ -845,7 +891,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                         const img = document.createElement('img');
                         img.alt = `Photo ${i+1}`;
                         img.loading = 'lazy';
-                        img.src = `${this.baseUrl}${i+1}.jpg`;
+                        // Use thumbBaseUrl for gallery grid images to save bandwidth
+                        img.src = `${this.thumbBaseUrl}${i+1}.jpg`;
                         img.dataset.index = i;
                         item.addEventListener('click', (e) => {
                             e.stopPropagation();
@@ -974,7 +1021,8 @@ url('https://cdn.glitch.global/9d7c4d49-fb5c-4c17-ab65-614ae426af88/hero') cente
                     for (let i = start; i < end; i++) {
                         const thumb = document.createElement('img');
                         thumb.className = 'thumbnail' + (i === this.currentImageIndex ? ' active' : '');
-                        thumb.src = `${this.baseUrl}${i+1}.jpg`;
+                        // Use thumbBaseUrl for bottom strip thumbnails
+                        thumb.src = `${this.thumbBaseUrl}${i+1}.jpg`;
                         thumb.alt = `Thumbnail ${i+1}`;
                         thumb.dataset.index = i;
                         this.thumbnailContainer.appendChild(thumb);
