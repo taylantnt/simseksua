@@ -42,10 +42,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
+        html, body {
+            background-color: #FAF9F3; /* Match the section background so any gaps blend in seamlessly */
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             display: flex;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             font-family: 'Montserrat', sans-serif;
             color: #333;
@@ -53,7 +59,10 @@
 
         .sidebar {
             width: 250px;
-            height: 100vh;
+            top: 0;
+            bottom: 0;
+            height: 100%; /* Fallback */
+            height: 100dvh;
             background-color: rgba(60, 52, 52, 0.18);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -160,6 +169,7 @@
             margin-left: 250px;
             width: calc(100% - 250px);
             height: 100vh;
+            height: 100dvh;
             overflow-y: auto;
             scroll-behavior: smooth;
         }
@@ -237,6 +247,7 @@
             background: radial-gradient(rgba(0, 0, 0, 0.5), rgba(107, 107, 107, 0.4) 36.13%, rgba(0, 0, 0, 0.5)), 
 var(--hero-bg-url) center/cover;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -422,7 +433,7 @@ var(--hero-bg-url) center/cover;
         /* Thumbnail Strip Styles */
         .thumbnail-strip {
             position: fixed;
-            bottom: 0;
+            bottom: -120px; /* Safely hide it below the screen */
             left: 0;
             right: 0;
             height: 100px;
@@ -432,8 +443,9 @@ var(--hero-bg-url) center/cover;
             padding: 0 20px;
             overflow-x: auto;
             z-index: 1001;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: bottom 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
             scrollbar-width: thin;
             scrollbar-color: #888 #222;
         }
@@ -448,7 +460,9 @@ var(--hero-bg-url) center/cover;
             background: #222;
         }
         .thumbnail-strip.active {
-            transform: translateY(0);
+            bottom: 0;
+            opacity: 1;
+            visibility: visible;
         }
         .thumbnail-container {
             display: flex;
@@ -877,7 +891,7 @@ var(--hero-bg-url) center/cover;
         <!-- Rest of your sections -->
 
         <!-- Photo Viewer Modal with Thumbnail Strip -->
-        <div id="photoViewer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;">
+        <div id="photoViewer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background-color: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;">
             <button id="prevBtn" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 40px; z-index: 998; cursor: pointer;">❮</button>
             <img id="modalImage" style="max-height: 80%; max-width: 90%; object-fit: contain; margin-bottom: 100px; will-change: transform;">
             <button id="nextBtn" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 40px; z-index: 998; cursor: pointer;">❯</button>
@@ -977,6 +991,12 @@ var(--hero-bg-url) center/cover;
                         this.handleSwipe();
                     }, { passive: true });
 
+                    this.modal.addEventListener('touchmove', (e) => {
+                        if (!e.target.closest('.thumbnail-strip')) {
+                            e.preventDefault();
+                        }
+                    }, { passive: false });
+
                     this.handleSwipe = () => {
                         const deltaX = touchEndX - touchStartX;
                         const deltaY = touchEndY - touchStartY;
@@ -1000,6 +1020,7 @@ var(--hero-bg-url) center/cover;
                 }
                 open(index) {
                     this.isOpen = true;
+                    document.body.classList.add('modal-open');
                     this.modal.style.display = 'flex';
                     this.thumbnailStrip.classList.add('active');
                     this.currentImageIndex = index;
@@ -1009,6 +1030,7 @@ var(--hero-bg-url) center/cover;
                 }
                 close() {
                     this.isOpen = false;
+                    document.body.classList.remove('modal-open');
                     this.modal.style.display = 'none';
                     this.thumbnailStrip.classList.remove('active');
                 }
