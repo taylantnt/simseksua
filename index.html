@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#FFFFFF">
     <meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
     <title>Simsek Sua Tortu - Portfolio</title>
     
@@ -44,7 +43,7 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         html, body {
-            background-color: transparent;
+            background-color: #FAF9F3; /* Match the section background so any gaps blend in seamlessly */
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -85,6 +84,7 @@
         .profile-pic {
             width: 150px;
             height: 150px;
+            min-height: 150px;
             border-radius: 50%;
             margin: 0 auto 20px;
             overflow: hidden;
@@ -1037,18 +1037,12 @@ var(--hero-bg-url) center/cover;
                     this.updateModalImage();
                     this.renderThumbnails();
                     this.scrollThumbnailIntoView();
-                    
-                    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                    if (metaThemeColor) metaThemeColor.setAttribute('content', '#000000');
                 }
                 close() {
                     this.isOpen = false;
                     document.body.classList.remove('modal-open');
                     this.modal.style.display = 'none';
                     this.thumbnailStrip.classList.remove('active');
-                    
-                    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                    if (metaThemeColor) metaThemeColor.setAttribute('content', '#FFFFFF');
                 }
                 updateModalImage() {
                     const src = `${this.baseUrl}${this.currentImageIndex+1}.jpg`;
@@ -1300,9 +1294,6 @@ var(--hero-bg-url) center/cover;
                         mobileMenuBtn.classList.remove('active');
                         const spans = mobileMenuBtn.querySelectorAll('span');
                         spans.forEach(span => span.style = '');
-                        
-                        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                        if (metaThemeColor) metaThemeColor.setAttribute('content', '#FFFFFF');
                     }
                 });
             });
@@ -1311,14 +1302,6 @@ var(--hero-bg-url) center/cover;
             mobileMenuBtn.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
                 this.classList.toggle('active');
-                
-                // Dynamically change theme-color for Safari bottom bar
-                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                if (this.classList.contains('active')) {
-                    if (metaThemeColor) metaThemeColor.setAttribute('content', '#3c3434');
-                } else {
-                    if (metaThemeColor) metaThemeColor.setAttribute('content', '#FFFFFF');
-                }
                 
                 const spans = this.querySelectorAll('span');
                 if (this.classList.contains('active')) {
