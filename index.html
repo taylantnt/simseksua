@@ -671,24 +671,26 @@ var(--hero-bg-url) center/cover;
             color: #ddd !important;
         }
 
-        /* Footer styles */
-        .site-footer {
-            text-align: center;
-            padding: 40px 20px;
-            font-size: 12px;
-            color: #888;
-            margin-top: 40px;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            background-color: transparent;
+        /* Sidebar Footer styles */
+        .sidebar-footer {
+            margin-top: auto; /* Pushes it to the bottom of the flex container */
+            padding-bottom: 20px;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
         }
         
-        .site-footer a {
+        .sidebar-footer p {
+            margin: 5px 0;
+        }
+        
+        .sidebar-footer a {
             color: #555;
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        .site-footer a:hover {
+        .sidebar-footer a:hover {
             color: #111;
         }
     </style>
@@ -717,6 +719,11 @@ var(--hero-bg-url) center/cover;
             <a class="nav-link" data-section="pricing">PRICING</a>
             <a class="nav-link" data-section="presets">PRESETS</a>
             <a class="nav-link" data-section="contact">CONTACT</a>
+        </div>
+        <div class="sidebar-footer">
+            <p>&copy; 2026 Simsek Sua TORTU.</p>
+            <p>All Rights Reserved.</p>
+            <p>Made by TT</p>
         </div>
     </div>
 
@@ -1177,12 +1184,6 @@ var(--hero-bg-url) center/cover;
                 </form>
             </div>
         </section>
-
-        <!-- Global Footer -->
-        <footer class="site-footer">
-            <p>&copy; 2026 Simsek Sua TORTU. All Rights Reserved.</p>
-            <p>Made by TT</p>
-        </footer>
     </div>
 
     <script>
