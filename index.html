@@ -590,7 +590,7 @@ var(--hero-bg-url) center/cover;
                 left: 0;
                 height: 120vh; /* Deliberately make it 20% taller than the screen */
                 height: 120dvh;
-                padding-bottom: 25vh; /* Offset the extra height so you can still scroll to the bottom links */
+                padding-bottom: 35vh; /* Offset the extra height so you can still scroll to the bottom links */
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
                 width: 100%;
@@ -713,11 +713,14 @@ var(--hero-bg-url) center/cover;
             .sidebar-footer {
                 color: white;
                 text-shadow: none !important;
+                margin-top: auto;
+                padding-bottom: 50px;
             }
 
+            .sidebar-footer p,
             .sidebar-footer a,
             .sidebar-footer a:hover {
-                color: white;
+                color: white !important;
                 text-shadow: none !important;
             }
         }
