@@ -561,6 +561,14 @@ var(--hero-bg-url) center/cover;
 
         /* Media Queries for Mobile Responsiveness */
         @media screen and (max-width: 768px) {
+            html, body {
+                position: static !important;
+                height: auto !important;
+                width: 100% !important;
+                overflow: visible !important;
+                display: block !important;
+            }
+
             .mobile-menu-btn {
                 display: block;
             }
@@ -570,34 +578,45 @@ var(--hero-bg-url) center/cover;
             }
 
             .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
                 width: 100%;
                 z-index: 998;  /* Below the mobile header */
                 padding-top: 60px;  /* Account for mobile header */
+                overflow-y: auto;
             }
 
             .content {
-                position: absolute;
-                left: 0;
-                top: 0;
-                margin: 0;
-                width: 100%;
-                height: 100vh;
+                position: static !important;
+                margin: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
             }
 
             .section {
-                padding: 5px; /* match the gallery gap */
-                padding-bottom: 0; /* NO extra padding */
-                /* Fit under the mobile header */
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                height: calc(100vh - 60px); /* Exactly the height of the physical screen minus the header */
-                margin-top: 0;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
+                padding: 5px;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 0 !important;
+                overflow: hidden !important;
+                margin-top: 0 !important;
+                visibility: hidden;
+            }
+
+            .section.active {
+                position: relative !important;
+                height: auto !important;
+                overflow: visible !important;
+                margin-top: 60px !important; /* Space for mobile header */
+                padding-bottom: env(safe-area-inset-bottom) !important;
+                visibility: visible;
             }
 
             /* Hide the name in the sidebar on mobile */
