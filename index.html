@@ -42,21 +42,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        html, body {
-            background-color: transparent;
+        html {
+            background-color: #FAF9F3; /* Prevents Safari's default white background from showing during repaints */
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            height: 100%;
+            width: 100%;
         }
 
         *, *:before, *:after {
             box-sizing: inherit;
         }
-
+        
         body {
+            background-color: #FAF9F3;
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
             display: flex;
-            height: 100vh;
-            height: 100dvh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             font-family: 'Montserrat', sans-serif;
             color: #333;
@@ -64,21 +73,20 @@
 
         .sidebar {
             width: 250px;
+            position: absolute;
             top: 0;
             bottom: 0;
-            height: 100%; /* Fallback */
-            height: 100dvh;
+            left: 0;
             background-color: rgba(60, 52, 52, 0.18);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            position: fixed;
-            left: 0;
             text-align: center;
             transform: translateX(0);
             transition: transform 0.3s ease;
+            z-index: 10;
         }
 
         .profile-pic {
@@ -172,12 +180,12 @@
         }
 
         .content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            height: 100vh;
-            height: 100dvh;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 250px;
             overflow: hidden;
-            position: relative;
         }
 
         .section {
@@ -440,7 +448,8 @@ var(--hero-bg-url) center/cover;
         /* Thumbnail Strip Styles */
         .thumbnail-strip {
             position: fixed;
-            bottom: -120px; /* Safely hide it below the screen */
+            bottom: 0;
+            transform: translateY(100%); /* Safely hide it below the screen using hardware acceleration */
             left: 0;
             right: 0;
             height: 100px;
@@ -450,7 +459,7 @@ var(--hero-bg-url) center/cover;
             padding: 0 20px;
             overflow-x: auto;
             z-index: 1001;
-            transition: bottom 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
             visibility: hidden;
             scrollbar-width: thin;
@@ -467,7 +476,7 @@ var(--hero-bg-url) center/cover;
             background: #222;
         }
         .thumbnail-strip.active {
-            bottom: 0;
+            transform: translateY(0);
             opacity: 1;
             visibility: visible;
         }
@@ -573,18 +582,17 @@ var(--hero-bg-url) center/cover;
             }
 
             .content {
-                margin-left: 0;
-                width: 100%;
-                padding-top: 60px;  /* Account for mobile header */
+                left: 0;
+                /* Remove padding since sections use top: 60px */
             }
 
             .section {
-                width: 100%;
                 padding: 10px;
-                padding-bottom: calc(100px + env(safe-area-inset-bottom));
-                /* Adjust height and top so it fits exactly under the mobile header */
+                padding-bottom: calc(200px + env(safe-area-inset-bottom)); /* Extra padding to compensate for extended bottom */
+                /* Fit under the mobile header */
                 top: 60px;
-                height: calc(100% - 60px);
+                bottom: -100px; /* Extend below the viewport to prevent Safari white bar gap */
+                height: auto;
                 margin-top: 0;
             }
 
@@ -901,7 +909,7 @@ var(--hero-bg-url) center/cover;
         <!-- Rest of your sections -->
 
         <!-- Photo Viewer Modal with Thumbnail Strip -->
-        <div id="photoViewer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background-color: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;">
+        <div id="photoViewer" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;">
             <button id="prevBtn" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 40px; z-index: 998; cursor: pointer;">❮</button>
             <img id="modalImage" style="max-height: 80%; max-width: 90%; object-fit: contain; margin-bottom: 100px; will-change: transform;">
             <button id="nextBtn" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 40px; z-index: 998; cursor: pointer;">❯</button>
