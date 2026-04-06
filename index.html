@@ -213,6 +213,13 @@
             transition: opacity 0.6s ease;
         }
 
+        /* Prevent desktop section from scrolling when modal is open */
+        @media screen and (min-width: 769px) {
+            body.modal-open .section {
+                overflow-y: hidden !important;
+            }
+        }
+
         .gallery {
             display: grid;
             /* Changed from 300px to 200px to fit more photos on wider screens */
@@ -589,6 +596,7 @@ var(--hero-bg-url) center/cover;
                 z-index: 998;  /* Below the mobile header */
                 padding-top: 60px;  /* Account for mobile header */
                 overflow-y: auto;
+                touch-action: pan-y; /* Ensure it scrolls even when body is locked */
             }
 
             .content {
@@ -618,6 +626,15 @@ var(--hero-bg-url) center/cover;
                 margin-top: 60px !important; /* Space for mobile header */
                 padding-bottom: env(safe-area-inset-bottom) !important;
                 visibility: visible;
+            }
+
+            /* Lock background scrolling when overlays are open */
+            body.nav-open, body.modal-open {
+                overflow: hidden !important;
+                position: fixed !important;
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
             }
 
             /* Hide the name in the sidebar on mobile */
@@ -1062,6 +1079,9 @@ var(--hero-bg-url) center/cover;
                 }
                 open(index) {
                     this.isOpen = true;
+                    if (window.scrollLock && !document.body.classList.contains('nav-open')) {
+                        window.scrollLock.lock();
+                    }
                     document.body.classList.add('modal-open');
                     document.documentElement.style.backgroundColor = '#000';
                     document.body.style.backgroundColor = '#000';
@@ -1075,6 +1095,9 @@ var(--hero-bg-url) center/cover;
                 close() {
                     this.isOpen = false;
                     document.body.classList.remove('modal-open');
+                    if (window.scrollLock && !document.body.classList.contains('nav-open')) {
+                        window.scrollLock.unlock();
+                    }
                     document.documentElement.style.backgroundColor = '#FAF9F3';
                     document.body.style.backgroundColor = '#FAF9F3';
                     this.modal.style.display = 'none';
@@ -1255,6 +1278,27 @@ var(--hero-bg-url) center/cover;
     </div>
 
     <script>
+        // Utility for locking/unlocking background scroll without losing position on mobile
+        window.scrollLock = {
+            scrollPosition: 0,
+            lock: function() {
+                // Only needed for mobile where body scrolls
+                if (window.innerWidth <= 768) {
+                    this.scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                    document.body.style.top = `-${this.scrollPosition}px`;
+                }
+            },
+            unlock: function() {
+                if (window.innerWidth <= 768) {
+                    document.body.style.top = '';
+                    // Force layout recalculation before scrolling
+                    window.requestAnimationFrame(() => {
+                        window.scrollTo(0, this.scrollPosition);
+                    });
+                }
+            }
+        };
+
         // Back to top functionality
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopButton = document.querySelector('.back-to-top');
@@ -1268,7 +1312,7 @@ var(--hero-bg-url) center/cover;
             function checkScroll() {
                 if (!document.body.classList.contains('modal-open')) {
                     const activeSection = document.querySelector('.section.active');
-                    const scrollTop = content.scrollTop + (activeSection ? activeSection.scrollTop : 0);
+                    const scrollTop = (window.pageYOffset || document.documentElement.scrollTop) + content.scrollTop + (activeSection ? activeSection.scrollTop : 0);
                     
                     if (scrollTop > 500) {
                         backToTopButton.classList.add('visible');
@@ -1277,6 +1321,10 @@ var(--hero-bg-url) center/cover;
                     }
                 }
             }
+
+            window.addEventListener('scroll', () => {
+                requestAnimationFrame(checkScroll);
+            });
 
             content.addEventListener('scroll', () => {
                 requestAnimationFrame(checkScroll);
@@ -1299,6 +1347,10 @@ var(--hero-bg-url) center/cover;
                     });
                 }
                 content.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
@@ -1328,6 +1380,10 @@ var(--hero-bg-url) center/cover;
                     if (window.innerWidth <= 768) {
                         sidebar.classList.remove('active');
                         mobileMenuBtn.classList.remove('active');
+                        if (document.body.classList.contains('nav-open')) {
+                            document.body.classList.remove('nav-open');
+                            window.scrollLock.unlock();
+                        }
                         const spans = mobileMenuBtn.querySelectorAll('span');
                         spans.forEach(span => span.style = '');
                     }
@@ -1338,6 +1394,14 @@ var(--hero-bg-url) center/cover;
             mobileMenuBtn.addEventListener('click', function() {
                 sidebar.classList.toggle('active');
                 this.classList.toggle('active');
+                
+                if (sidebar.classList.contains('active')) {
+                    window.scrollLock.lock();
+                    document.body.classList.add('nav-open');
+                } else {
+                    document.body.classList.remove('nav-open');
+                    window.scrollLock.unlock();
+                }
                 
                 const spans = this.querySelectorAll('span');
                 if (this.classList.contains('active')) {
@@ -1351,10 +1415,9 @@ var(--hero-bg-url) center/cover;
 
             // Initialize PhotoViewer after DOM is loaded
             const photoViewer = new PhotoViewer();
-            photoViewer.populateGallery();
             
             document.querySelector('.close').addEventListener('click', function() {
-                photoViewer.closeModal();
+                photoViewer.close();
             });
 
             // Contact Form Submission Handler
