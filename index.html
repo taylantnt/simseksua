@@ -658,11 +658,41 @@ var(--hero-bg-url) center/cover;
                 height: 200px;
             }
 
-            .about, .contact, .pricing .presets{
+            .about {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), var(--hero-bg-url) center/cover !important;
+            }
+
+            .about, .contact, .pricing, .presets-content {
+                padding: 30px 20px !important;
+            }
+
+            #presets .pricing-cards {
+                padding: 0 20px 40px !important;
             }
 
             .pricing-cards {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pricing-card {
+                padding: 25px;
+                box-shadow: none !important;
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+
+            .pricing-card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+
+            .gallery-item:hover {
+                box-shadow: none !important;
+                z-index: auto !important;
+            }
+
+            .gallery-item:hover img {
+                transform: none !important;
             }
 
             /* Remove or comment out this duplicate .name style */
@@ -676,6 +706,7 @@ var(--hero-bg-url) center/cover;
             .nav-link {
                 font-size: 30px;
                 color: white;
+                text-shadow: none !important;
             }
 
             .profile-pic {
