@@ -47,11 +47,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            height: 100vh;
-            width: 100%;
             position: fixed;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100vh; /* Forces Safari to extend to the physical bottom of the device, behind the glass */
             overflow: hidden;
         }
 
@@ -578,22 +578,26 @@ var(--hero-bg-url) center/cover;
             }
 
             .content {
+                position: absolute;
                 left: 0;
-                right: 0;
+                top: 0;
                 margin: 0;
                 width: 100%;
                 height: 100vh;
-                /* Remove padding since sections use top: 60px */
             }
 
             .section {
                 padding: 5px; /* match the gallery gap */
-                padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Small padding so last image isn't totally blocked by the glass */
+                padding-bottom: 0; /* NO extra padding */
                 /* Fit under the mobile header */
+                position: absolute;
                 top: 60px;
-                bottom: auto; 
-                height: calc(100vh - 60px); /* Force exact height to flow underneath Safari glass */
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 60px); /* Exactly the height of the physical screen minus the header */
                 margin-top: 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             /* Hide the name in the sidebar on mobile */
