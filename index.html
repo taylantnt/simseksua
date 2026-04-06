@@ -587,11 +587,11 @@ var(--hero-bg-url) center/cover;
             }
 
             .section {
-                padding: 10px;
-                padding-bottom: calc(200px + env(safe-area-inset-bottom)); /* Extra padding to compensate for extended bottom */
+                padding: 0px;
+                padding-bottom: calc(50px + env(safe-area-inset-bottom)); /* Just enough space to scroll past the transparent address bar */
                 /* Fit under the mobile header */
                 top: 60px;
-                bottom: -100px; /* Extend below the viewport to prevent Safari white bar gap */
+                bottom: 0; /* Align perfectly to the bottom viewport edge */
                 height: auto;
                 margin-top: 0;
             }
