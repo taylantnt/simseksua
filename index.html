@@ -42,16 +42,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        html {
+        html, body {
             background-color: #FAF9F3;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            height: 100vh;
+            width: 100%;
             position: fixed;
             top: 0;
-            bottom: 0;
             left: 0;
-            right: 0;
             overflow: hidden;
         }
 
@@ -60,17 +60,7 @@
         }
         
         body {
-            background-color: #FAF9F3;
-            margin: 0;
-            padding: 0;
-            box-sizing: inherit;
             display: flex;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            overflow: hidden;
             font-family: 'Montserrat', sans-serif;
             color: #333;
         }
@@ -591,17 +581,18 @@ var(--hero-bg-url) center/cover;
                 left: 0;
                 right: 0;
                 margin: 0;
-                width: auto;
+                width: 100%;
+                height: 100vh;
                 /* Remove padding since sections use top: 60px */
             }
 
             .section {
                 padding: 5px; /* match the gallery gap */
-                padding-bottom: env(safe-area-inset-bottom); /* Removed the extra 50px so pictures flow right to the physical bottom */
+                padding-bottom: calc(40px + env(safe-area-inset-bottom)); /* Small padding so last image isn't totally blocked by the glass */
                 /* Fit under the mobile header */
                 top: 60px;
-                bottom: 0; /* Align perfectly to the bottom viewport edge */
-                height: auto;
+                bottom: auto; 
+                height: calc(100vh - 60px); /* Force exact height to flow underneath Safari glass */
                 margin-top: 0;
             }
 
