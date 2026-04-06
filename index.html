@@ -43,12 +43,16 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         html {
-            background-color: #FAF9F3; /* Prevents Safari's default white background from showing during repaints */
+            background-color: #FAF9F3;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            height: 100%;
-            width: 100%;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
         }
 
         *, *:before, *:after {
@@ -61,11 +65,11 @@
             padding: 0;
             box-sizing: inherit;
             display: flex;
-            position: absolute;
+            position: fixed;
             top: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
             overflow: hidden;
             font-family: 'Montserrat', sans-serif;
             color: #333;
@@ -185,6 +189,8 @@
             bottom: 0;
             right: 0;
             left: 250px;
+            margin: 0;
+            width: auto;
             overflow: hidden;
         }
 
@@ -583,12 +589,15 @@ var(--hero-bg-url) center/cover;
 
             .content {
                 left: 0;
+                right: 0;
+                margin: 0;
+                width: auto;
                 /* Remove padding since sections use top: 60px */
             }
 
             .section {
-                padding: 0px;
-                padding-bottom: calc(50px + env(safe-area-inset-bottom)); /* Just enough space to scroll past the transparent address bar */
+                padding: 5px; /* match the gallery gap */
+                padding-bottom: env(safe-area-inset-bottom); /* Removed the extra 50px so pictures flow right to the physical bottom */
                 /* Fit under the mobile header */
                 top: 60px;
                 bottom: 0; /* Align perfectly to the bottom viewport edge */
