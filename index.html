@@ -20,7 +20,7 @@
             profile: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414953/profile_uon3ro.jpg',
             presetBefore: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414957/before1_dzqutg.jpg',
             presetAfter: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414955/after1_gkvq24.jpg',
-            hero: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414804/s-98.jpg'
+            hero: 'https://res.cloudinary.com/drnh8zy84/image/upload/f_auto,q_auto,dpr_auto/v1775414734/s-43.jpg'
         };
 
         // Apply background images
@@ -589,6 +589,7 @@ var(--hero-bg-url) center/cover;
                 top: 0;
                 left: 0;
                 height: 120vh; /* Deliberately make it 20% taller than the screen */
+                height: 120dvh;
                 padding-bottom: 25vh; /* Offset the extra height so you can still scroll to the bottom links */
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
@@ -633,8 +634,7 @@ var(--hero-bg-url) center/cover;
                 overflow: hidden !important;
                 position: fixed !important;
                 width: 100% !important;
-                height: 100vh !important;
-                height: 100dvh !important;
+                height: auto !important; /* Allow full content height so shifting up doesn't leave a blank gap */
             }
 
             /* Hide the name in the sidebar on mobile */
