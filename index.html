@@ -1192,6 +1192,7 @@ var(--hero-bg-url) center/cover;
                             this.currentImageIndex = idx;
                             this.updateModalImage();
                             this.renderThumbnails();
+                            this.scrollThumbnailIntoView();
                         }
                     });
                     window.addEventListener('resize', () => {
@@ -1276,9 +1277,33 @@ var(--hero-bg-url) center/cover;
                 }
                 updateModalImage() {
                     const src = `${this.baseUrl}${this.currentImageIndex+1}.jpg`;
-                    this.modalImg.className = '';
-                    this.modalImg.classList.add('fade-in');
-                    this.modalImg.src = src;
+                    const img = this.modalImg;
+
+                    // Skip if already showing this image
+                    if (img.dataset.currentSrc === src) return;
+                    img.dataset.currentSrc = src;
+
+                    const swapImage = () => {
+                        // Guard: if user navigated again during fade-out, abort
+                        if (img.dataset.currentSrc !== src) return;
+                        img.src = src;
+                        img.onload = () => {
+                            // Only fade in if this is still the requested image
+                            if (img.dataset.currentSrc === src) {
+                                img.classList.add('fade-in');
+                            }
+                            img.onload = null;
+                        };
+                    };
+
+                    // First open or already faded out: swap immediately
+                    if (!img.classList.contains('fade-in') || !img.src) {
+                        swapImage();
+                    } else {
+                        // Fade out current image, then swap after the transition
+                        img.classList.remove('fade-in');
+                        setTimeout(swapImage, 180);
+                    }
                 }
                 prev() {
                     let idx = this.currentImageIndex - 1;
@@ -1297,24 +1322,27 @@ var(--hero-bg-url) center/cover;
                     this.scrollThumbnailIntoView();
                 }
                 renderThumbnails() {
-                    // Dynamically determine how many thumbnails to show based on screen width
-                    const isMobile = window.innerWidth <= 768;
-                    let range = isMobile ? 7 : Math.max(15, Math.floor(window.innerWidth / 90));
-                    let half = Math.floor(range / 2);
-                    let start = Math.max(0, this.currentImageIndex - half);
-                    let end = Math.min(this.totalImages, start + range);
-                    if (end - start < range) {
-                        start = Math.max(0, end - range);
+                    // Build all thumbnails once (lazy-loaded), then only toggle active class
+                    if (this.thumbnailContainer.children.length === 0) {
+                        const frag = document.createDocumentFragment();
+                        for (let i = 0; i < this.totalImages; i++) {
+                            const thumb = document.createElement('img');
+                            thumb.className = 'thumbnail';
+                            // Use thumbBaseUrl for bottom strip thumbnails
+                            thumb.src = `${this.thumbBaseUrl}${i+1}.jpg`;
+                            thumb.loading = 'lazy';
+                            thumb.alt = `Thumbnail ${i+1}`;
+                            thumb.dataset.index = i;
+                            frag.appendChild(thumb);
+                        }
+                        this.thumbnailContainer.appendChild(frag);
                     }
-                    this.thumbnailContainer.innerHTML = '';
-                    for (let i = start; i < end; i++) {
-                        const thumb = document.createElement('img');
-                        thumb.className = 'thumbnail' + (i === this.currentImageIndex ? ' active' : '');
-                        // Use thumbBaseUrl for bottom strip thumbnails
-                        thumb.src = `${this.thumbBaseUrl}${i+1}.jpg`;
-                        thumb.alt = `Thumbnail ${i+1}`;
-                        thumb.dataset.index = i;
-                        this.thumbnailContainer.appendChild(thumb);
+                    // Update active state only (cheap — just two class changes)
+                    const thumbs = this.thumbnailContainer.children;
+                    const prevActive = this.thumbnailContainer.querySelector('.thumbnail.active');
+                    if (prevActive) prevActive.classList.remove('active');
+                    if (thumbs[this.currentImageIndex]) {
+                        thumbs[this.currentImageIndex].classList.add('active');
                     }
                 }
                 scrollThumbnailIntoView() {
@@ -1601,13 +1629,6 @@ var(--hero-bg-url) center/cover;
                 } else {
                     spans.forEach(span => span.style = '');
                 }
-            });
-
-            // Initialize PhotoViewer after DOM is loaded
-            const photoViewer = new PhotoViewer();
-            
-            document.querySelector('.close').addEventListener('click', function() {
-                photoViewer.close();
             });
 
             // Contact Form Submission Handler
