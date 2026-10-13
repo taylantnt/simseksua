@@ -833,6 +833,7 @@ var(--hero-bg-url) center/cover;
             <a class="nav-link" data-section="pricing">PRICING</a>
             <a class="nav-link" data-section="presets">PRESETS</a>
             <a class="nav-link" data-section="contact">CONTACT</a>
+            <a class="nav-link" href="https://www.instagram.com/simsek.sua/" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
         </div>
         <div class="sidebar-footer">
             <p>&copy; 2026 Simsek Sua TORTU. All Rights Reserved.</p>
@@ -1402,6 +1403,11 @@ var(--hero-bg-url) center/cover;
             // Rest of the event listeners
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
+                    // External links (no data-section) should navigate normally
+                    if (!this.hasAttribute('data-section')) {
+                        return;
+                    }
+
                     e.preventDefault();
                     
                     // Get target section
