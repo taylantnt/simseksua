@@ -807,14 +807,139 @@ var(--hero-bg-url) center/cover;
         .sidebar-footer a:hover {
             color: #111;
         }
+
+        /* ==================== DARK MODE ==================== */
+        /* Sophisticated warm dark palette, not plain black */
+        :root {
+            --bg: #FAF9F3;
+            --text: #333;
+            --text-soft: #666;
+            --text-muted: #777;
+            --card-bg: rgba(213, 213, 213, 0.31);
+            --sidebar-bg: rgba(60, 52, 52, 0.18);
+            --btn-bg: #333;
+            --btn-hover: #555;
+            --border: #ddd;
+            --border-focus: #888;
+            --header-bg: #ffffff;
+        }
+        [data-theme="dark"] {
+            --bg: #1C1B18;
+            --text: #E5E2DA;
+            --text-soft: #A8A59C;
+            --text-muted: #9A968C;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --sidebar-bg: rgba(255, 255, 255, 0.04);
+            --btn-bg: #3A3833;
+            --btn-hover: #4A4843;
+            --border: rgba(255, 255, 255, 0.12);
+            --border-focus: #B0ADA3;
+            --header-bg: #1C1B18;
+        }
+        html, body { background-color: var(--bg); color: var(--text); }
+        body { color: var(--text); }
+        .sidebar { background-color: var(--sidebar-bg); }
+        .name { color: var(--text); }
+        .nav-link { color: var(--text-muted); text-shadow: none; }
+        .nav-link:after { background-color: var(--text); }
+        .nav-link:hover, .nav-link.active { color: var(--text); }
+        .section { background-color: var(--bg); }
+        .contact h2, .pricing h2, #presets h2 { color: var(--text); }
+        .pricing-card { background-color: var(--card-bg); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .pricing-card h3 { color: var(--text); }
+        .price { color: var(--text); }
+        .features li { color: var(--text-soft); }
+        .btn { background-color: var(--btn-bg); }
+        .btn:hover { background-color: var(--btn-hover); }
+        .form-group label { color: var(--text-soft); }
+        .form-group input, .form-group textarea {
+            background-color: var(--bg);
+            border-color: var(--border);
+            color: var(--text);
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--border-focus); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #777; }
+        .mobile-header { background-color: var(--header-bg); box-shadow: 0 8px 18px rgba(0,0,0,0.5); }
+        .site-name { color: var(--text); }
+        .sidebar-footer { color: var(--text-soft); }
+        .sidebar-footer a { color: var(--text-muted); }
+        .sidebar-footer a:hover { color: var(--text); }
+        /* Override inline color styles in presets / contact copy */
+        #presets .presets-content p { color: var(--text-soft) !important; }
+        .contact p { color: var(--text-soft); }
+        .contact-form > p { color: var(--text-soft) !important; }
+        .pricing p { color: var(--text-soft); }
+        #presets .pricing-card p { color: var(--text-soft) !important; }
+        /* About section keeps its image + dark overlay, just nudge text */
+        .about { color: #fff; }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(128, 128, 128, 0.25);
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.35s ease, background 0.3s ease, border-color 0.3s ease;
+            margin: 15px auto 0;
+            padding: 0;
+        }
+        .theme-toggle:hover { transform: rotate(20deg); border-color: rgba(128, 128, 128, 0.5); }
+        .theme-toggle svg { width: 18px; height: 18px; transition: opacity 0.3s ease, transform 0.3s ease; position: absolute; }
+        .theme-toggle .icon-sun { opacity: 1; transform: rotate(0deg); }
+        .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg); }
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        [data-theme="dark"] .theme-toggle:hover { border-color: rgba(255, 255, 255, 0.35); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }
+        [data-theme="dark"] .theme-toggle svg { fill: #E5E2DA; }
+        .theme-toggle svg { fill: #333; }
+
+        /* Toggle visibility: sidebar version on desktop, fixed top-left on mobile */
+        .theme-toggle-mobile { display: none; }
+        @media screen and (max-width: 768px) {
+            .theme-toggle-sidebar { display: none; }
+            .theme-toggle-mobile {
+                display: flex;
+                position: fixed;
+                top: 11px;
+                left: 20px;
+                z-index: 1000;
+                margin: 0;
+            }
+        }
     </style>
     <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
+    <script>
+        // Apply saved theme before paint to avoid flash of wrong theme
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var theme = saved || (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <button class="mobile-menu-btn">
         <span></span>
         <span></span>
         <span></span>
+    </button>
+    <button class="theme-toggle theme-toggle-mobile" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-1.8a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.3 4.7l1.4 1.4L3.3 7.5 2 6.1l1.3-1.4zm17.4 17.4l-1.4-1.4 1.4-1.4 1.3 1.4-1.3 1.4zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.7 20.7l1.4-1.4 1.4 1.4-1.4 1.3-1.4-1.3zm13.6-16l-1.4 1.4-1.4-1.4L17 3.3l1.3 1.4z"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 13.5A9 9 0 1 1 10.5 3a7.5 7.5 0 0 0 10.5 10.5z"/></svg>
     </button>
     <div class="mobile-header">
         <div class="site-name">SIMSEK SUA TORTU</div>
@@ -839,6 +964,10 @@ var(--hero-bg-url) center/cover;
             <p>&copy; 2026 Simsek Sua TORTU. All Rights Reserved.</p>
             <br>
             <p>Made by TT</p>
+            <button class="theme-toggle theme-toggle-sidebar" aria-label="Toggle dark mode">
+                <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-1.8a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.3 4.7l1.4 1.4L3.3 7.5 2 6.1l1.3-1.4zm17.4 17.4l-1.4-1.4 1.4-1.4 1.3 1.4-1.3 1.4zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.7 20.7l1.4-1.4 1.4 1.4-1.4 1.3-1.4-1.3zm13.6-16l-1.4 1.4-1.4-1.4L17 3.3l1.3 1.4z"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 13.5A9 9 0 1 1 10.5 3a7.5 7.5 0 0 0 10.5 10.5z"/></svg>
+            </button>
         </div>
     </div>
 
@@ -1351,6 +1480,18 @@ var(--hero-bg-url) center/cover;
             const sections = document.querySelectorAll('.section');
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const sidebar = document.querySelector('.sidebar');
+
+            // Theme toggle
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                try { localStorage.setItem('theme', theme); } catch (e) {}
+            }
+            document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const current = document.documentElement.getAttribute('data-theme');
+                    setTheme(current === 'dark' ? 'light' : 'dark');
+                });
+            });
 
             // Back to top visibility with content and section scroll
             function checkScroll() {
