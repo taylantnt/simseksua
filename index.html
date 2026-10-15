@@ -504,6 +504,53 @@ var(--hero-bg-url) center/cover;
         .thumbnail.active {
             border: 2px solid white;
         }
+
+        /* Compressed sidebar for short viewports (e.g. iPad mini landscape) */
+        /* Only affects desktop-width screens that are too short for the full sidebar */
+        @media screen and (max-height: 800px) and (min-width: 769px) {
+            .sidebar {
+                padding: 20px 20px;
+            }
+            .profile-pic {
+                width: 110px;
+                height: 110px;
+                min-height: 110px;
+                margin: 0 auto 12px;
+                border-width: 4px;
+            }
+            .profile-pic .instagram-overlay {
+                width: 26px;
+                height: 26px;
+                padding: 4px;
+                bottom: 8px;
+            }
+            .name {
+                font-size: 20px;
+                margin-bottom: 25px;
+            }
+            .nav-links {
+                gap: 14px;
+            }
+            .nav-link {
+                font-size: 13px;
+                letter-spacing: 1.5px;
+                padding-bottom: 4px;
+            }
+            .sidebar-footer {
+                font-size: 10px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+            .theme-toggle {
+                width: 32px;
+                height: 32px;
+                margin-top: 10px;
+            }
+            .theme-toggle svg {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
         @media screen and (max-width: 768px) {
             .thumbnail-strip {
                 height: 70px;
